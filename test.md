@@ -1,1 +1,6 @@
-## test my blog
+---
+title: This is my title
+layout: post
+---
+
+Here is my page.
