@@ -1,9 +1,9 @@
 # Basic
 title: Jiannan Blog
 subtitle: 学习中
-welcome_message: <a href="https://github.com/onevcat/vno-jekyll" target="_blank">Download the theme</a>
-description: Vno Jekyll is a port of my Ghost theme vno.
-creator: <a href="http://onev.cat">@onevcat</a>
+#welcome_message: <a href="https://github.com/onevcat/vno-jekyll" target="_blank">Download the theme</a>
+#description: Vno Jekyll is a port of my Ghost theme vno.
+creator: <a href="https://github.com/jiannanjiang">@JiannanJiang</a>
 
 url: "http://jiannanjiang.github.io"
 
