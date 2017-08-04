@@ -1,0 +1,7 @@
+.buildpath
+.project
+.settings/
+deployment.properties
+deployment.xml
+.idea
+.idea/workspace.xml
