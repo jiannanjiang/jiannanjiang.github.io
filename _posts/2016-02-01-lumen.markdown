@@ -1,0 +1,59 @@
+---
+layout: post
+title: Lumen 环境搭建
+date: 2016-02-01 11:30:55.000000000 +08:00
+---
+
+### 安装composer
+`$ curl -sS https://getcomposer.org/installer | php -- --install-dir=lumen`
+
+#### 全局使用
+`$ mv composer.phar /usr/local/bin/composer`
+
+#### 配置PATH
+`$ export PATH=~/.composer/vendor/bin:$PATH`
+
+### 安装lumen
+`$ composer global require "laravel/lumen-installer"`
+
+### 设置nginx
+```
+server {
+listen  80;
+server_name www.lumen.loc;
+set $root_path '/home/wwwroot/lumen/public';  
+root $root_path;
+index index.php index.html index.htm;  
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+location ~ (index|get|static|report|404|503)\.php$ {
+    try_files $uri =404;
+    fastcgi_pass   fastcgi_backend;
+
+    fastcgi_param  PHP_FLAG  "session.auto_start=off \n suhosin.session.cryptua=off";
+    fastcgi_param  PHP_VALUE "memory_limit=256M \n max_execution_time=600";
+    fastcgi_read_timeout 600s;
+    fastcgi_connect_timeout 600s;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+}
+    location ~* ^/(css|img|js|flv|swf|download)/(.+)$ {
+        root $root_path;  
+    }
+    location ~ /\.ht {
+        deny all;
+    }
+}
+```
+
+### 修改hosts 
+/etc/hosts  
+
+### composer 重新加载类库
+php composer.phar dump-autoload
+
+
+
+
