@@ -72,12 +72,20 @@ $ systemctl enable php-fpm.service
 
 ```
 
-#### 安装PHP组件，使PHP支持 MySQL、PHP支持FastCGI模式
+#### 安装PHP组件，使PHP支持 MySQL、PHP支持FastCGI模式(补充，非必装)
 
 yum install php-mysql php-gd libjpeg* php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-bcmath php-mhash libmcrypt libmcrypt-devel php-fpm php-intl
 
-` yum -y install php70w-xml.x86_64`
+#### 安装gcc和g++
 
+`$ yum -y install gcc`
+
+`$ yum -y install gcc-c++`
+
+#### 安装bcmath扩展
+
+`$ yum -y install php70w-bcmath`
+    
 #### 设置开机启动
 
 chkconfig php-fpm on 
@@ -87,12 +95,6 @@ chkconfig php-fpm on
 vim /etc/php-fpm.d/www.conf
 
 修改user和group为nginx
-
-vim  /etc/nginx/conf.d/default.conf
-index 增加index.php
-配置用户为user nginx nginx;
-
-配置fastCGI监听9000端口
 
 vim /etc/nginx/nginx.conf
 放在http里面
@@ -109,61 +111,42 @@ upstream fastcgi_backend {
     server  127.0.0.1:9000;
 }
 
+下面是demo
+
+```
+server
+{
+  listen 80;
+  server_name www.dev.com;
+  root /home/www/dev/public;
+  index index.php index.html index.htm;
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+
+  location = /favicon.ico {
+    log_not_found off;
+    access_log off;
+  }
+
+
+#  location ~* \.(jpg|jpeg|gif|css|png|js|ico)$ { aio on; directio 512k; access_log off; expires 7d; break; }
+
+  location ~ \.php$ {
+    fastcgi_index                   index.php;
+    fastcgi_pass                    127.0.0.1:9000;
+    include                         fastcgi_params;
+    fastcgi_intercept_errors        On;
+    fastcgi_param SCRIPT_FILENAME   $document_root$fastcgi_script_name;
+    fastcgi_ignore_client_abort     On;
+    fastcgi_buffer_size             128k;
+    fastcgi_buffers                 4 128k;
+  }
+}
+```
 
 
 ### 安装Mysql
 
 另外一篇文章有介绍
-
-### 升级PHP到5.6
-
-
-rpm -Uvh http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
-
-
-rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
-
-
-yum list --enablerepo=remi --enablerepo=remi-php56 | grep php
-
-yum install --enablerepo=remi --enablerepo=remi-php56 php php-opcache php-devel php-mbstring php-mcrypt php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-pecl-xhprof
-
-yum -y install php56u php56u-opcache php56u-xml php56u-mcrypt php56u-gd php56u-devel php56u-mysql php56u-intl php56u-mbstring php56u-bcmath
-
-
-
-
-
-### Magento官方给出的centos安装PHP方法
-
-yum -y update
-yum -y install epel-release
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-wget https://centos6.iuscommunity.org/ius-release.rpm
-rpm -Uvh ius-release*.rpm
-yum -y update
-yum -y install php56u php56u-opcache php56u-xml php56u-mcrypt php56u-gd php56u-devel php56u-mysql php56u-intl php56u-mbstring php56u-bcmath php56u-fpm
-
-太慢 需要翻墙
-
-另外PHP装上之后 可能缺少某些扩展 比如intl
-
-安装的话可以用pecl
-
-yum install libicu
-
-yum install libicu-devel.x86_64
-
-/usr/bin/pecl install intl
-
-如果报错了，是因为xml扩展不能加载，重新安装pear可以解决
-
-yum erase php-pear
-
-rpm -Uvh http://ftp.iij.ad.jp/pub/linux/fedora/epel/6/x86_64/epel-release-6-8.noarch.rpm
-
-rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
-
-yum install --enablerepo=remi --enablerepo=remi-php56 php-pear
-
-最后在php.ini里面加上 extension=intl.so就可以了
