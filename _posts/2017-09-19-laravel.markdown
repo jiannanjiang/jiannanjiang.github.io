@@ -1,10 +1,14 @@
 ---
 layout: post
-title: Laravel 框架使用问题汇总
+title: 记录下 Laravel 中的那些坑
 date: 2017-08-06 14:32:55.000000000 +08:00
 ---
 
 
 ### session存不上
 
-默认session用file存储，比较不靠谱，可以试试用redis或者database
+laravel 的session
+
+
+ php artisan cache:clear 会清空当前driver中的所有数据
+ 所以redis如果存了东西 就不要在用来当缓存了
