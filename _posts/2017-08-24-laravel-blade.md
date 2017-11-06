@@ -34,6 +34,7 @@ Laravel自带的Blade模板很强大也很方便
 在这三个页面中需要共同使用的部分有 页面的外围template,导航栏部分head
 
 其中template用来放整个页面的框架布局
+
 ```
 <!DOCTYPE html>
 <html lang="en">
