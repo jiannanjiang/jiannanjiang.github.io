@@ -14,9 +14,12 @@ wget http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7
 #### 安装源库
 
 chmod +x nginx-release-centos-7-0.el7.ngx.noarch.rpm
+
 rpm -i nginx-release-centos-7-0.el7.ngx.noarch.rpm
 
 #### 安装nginx
+
+yum install initscripts
 
 yum -y install nginx
 
